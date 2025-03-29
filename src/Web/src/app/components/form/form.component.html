@@ -1,0 +1,58 @@
+<div class="container mt-4">
+  <h2>Cadastro de Usuário</h2>
+  <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label for="name" class="form-label">Nome</label>
+      <input
+        type="text"
+        id="name"
+        class="form-control"
+        formControlName="name"
+      />
+      <div
+        *ngIf="userForm.get('name')?.invalid && userForm.get('name')?.touched"
+        class="text-danger"
+      >
+        Nome deve ter pelo menos 3 caracteres.
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="email" class="form-label">E-mail</label>
+      <input
+        type="email"
+        id="email"
+        class="form-control"
+        formControlName="email"
+      />
+      <div
+        *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched"
+        class="text-danger"
+      >
+        Insira um e-mail válido.
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="password" class="form-label">Senha</label>
+      <input
+        type="password"
+        id="password"
+        class="form-control"
+        formControlName="password"
+      />
+      <div
+        *ngIf="
+          userForm.get('password')?.invalid && userForm.get('password')?.touched
+        "
+        class="text-danger"
+      >
+        A senha deve ter pelo menos 6 caracteres.
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary" [disabled]="userForm.invalid">
+      Enviar
+    </button>
+  </form>
+</div>
