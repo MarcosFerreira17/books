@@ -1,0 +1,4 @@
+﻿CREATE TABLE [dbo].Autor (
+    CodAu INT PRIMARY KEY IDENTITY,
+    Nome VARCHAR(40) NOT NULL
+);
