@@ -1,4 +1,4 @@
-```markdown
+
 # Sistema de Gerenciamento de Livros
 
 ![Angular](https://img.shields.io/badge/Angular-17+-DD0031?logo=angular)
