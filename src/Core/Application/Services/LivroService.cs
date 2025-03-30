@@ -49,9 +49,9 @@ public class LivroService : ILivroService
                 Editora = l.Editora,
                 Edicao = l.Edicao,
                 AnoPublicacao = l.AnoPublicacao,
-                Autores = l.Autores.Select(la => new AutorDTO { Nome = la.Autor.Nome }).ToList(),
-                Assuntos = l.Assuntos.Select(las => new AssuntoDTO { Descricao = las.Assunto.Descricao }).ToList(),
-                Precos = l.Precos.Select(las => new LivroPrecoDTO { TipoCompra = las.TipoCompra, Valor = las.Valor }).ToList()
+                Autores = l.Autores.Select(la => new GetAutorDTO { CodAu = la.Autor.CodAu, Nome = la.Autor.Nome }).ToList(),
+                Assuntos = l.Assuntos.Select(las => new GetAssuntoDTO { CodAs = las.Assunto.CodAs ,Descricao = las.Assunto.Descricao }).ToList(),
+                Precos = l.Precos.Select(las => new GetLivroPrecoDTO { Codp = las.Codp, TipoCompra = las.TipoCompra, Valor = las.Valor }).ToList()
             })
             .ToList();
 
@@ -73,9 +73,9 @@ public class LivroService : ILivroService
                 Editora = l.Editora,
                 Edicao = l.Edicao,
                 AnoPublicacao = l.AnoPublicacao,
-                Autores = l.Autores.Select(la => new AutorDTO { Nome = la.Autor.Nome }).ToList(),
-                Assuntos = l.Assuntos.Select(las => new AssuntoDTO { Descricao = las.Assunto.Descricao }).ToList(),
-                Precos = l.Precos.Select(las => new LivroPrecoDTO { TipoCompra = las.TipoCompra, Valor = las.Valor }).ToList()
+                Autores = l.Autores.Select(la => new GetAutorDTO { CodAu = la.Autor.CodAu, Nome = la.Autor.Nome }).ToList(),
+                Assuntos = l.Assuntos.Select(las => new GetAssuntoDTO { CodAs = las.Assunto.CodAs , Descricao = las.Assunto.Descricao }).ToList(),
+                Precos = l.Precos.Select(las => new GetLivroPrecoDTO { LivroCodl = las.LivroCodl, Codp = las.Codp,TipoCompra = las.TipoCompra, Valor = las.Valor }).ToList()
             })
             .FirstOrDefault(l => l.Codl == cod);
 
@@ -85,12 +85,12 @@ public class LivroService : ILivroService
         return ResultGeneric<GetLivroDTO>.Success(livro);
     }
 
-    public Result Create(LivroDTO request)
+    public ResultGeneric<int> Create(LivroDTO request)
     {
         var errors = ValidateLivro(request);
 
         if (errors.Any())
-            return Result.Failure(errors);
+            return ResultGeneric<int>.Failure(errors);
 
         var livro = new Livro
         {
@@ -102,10 +102,10 @@ public class LivroService : ILivroService
 
         AddRelacionamentos(livro, request.Autores, request.Assuntos);
 
-        _livroRepository.Insert(livro);
+        var entity = _livroRepository.Insert(livro);
         _livroRepository.SaveChanges();
 
-        return Result.Success();
+        return ResultGeneric<int>.Success(entity.Codl);
     }
 
     public Result Update(int cod, LivroDTO request)

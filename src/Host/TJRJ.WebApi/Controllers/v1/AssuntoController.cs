@@ -27,7 +27,7 @@ public class AssuntosController : BaseController
     {
         var result = _assuntoService.GetById(id);
 
-        return HandleResult(result);
+        return HandleResultById(result);
     }
 
     [HttpPost]

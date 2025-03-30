@@ -1,0 +1,77 @@
+<div class="container mt-4">
+  <!-- Formulário -->
+  <div class="card mb-4">
+    <div class="card-body">
+      <h2>{{ isEditing ? "Editar" : "Novo" }} Assunto</h2>
+      <form [formGroup]="assuntoForm" (ngSubmit)="onSubmit()">
+        <div class="row g-3">
+          <div class="col-12">
+            <label class="form-label">Descrição</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="descricao"
+            />
+            <div
+              *ngIf="
+                assuntoForm.get('descricao')?.invalid &&
+                assuntoForm.get('descricao')?.touched
+              "
+              class="text-danger"
+            >
+              Descrição é obrigatória (máx. 20 caracteres)
+            </div>
+          </div>
+
+          <div class="col-12">
+            <button
+              type="submit"
+              class="btn btn-primary"
+              [disabled]="assuntoForm.invalid"
+            >
+              {{ isEditing ? "Atualizar" : "Salvar" }}
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary ms-2"
+              (click)="resetForm()"
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Tabela -->
+  <div class="card">
+    <div class="card-body">
+      <h2>Lista de Assuntos</h2>
+      <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th>Descrição</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let assunto of assuntos">
+            <td>{{ assunto.descricao }}</td>
+            <td>
+              <button class="btn btn-sm btn-warning" (click)="onEdit(assunto)">
+                <i class="bi bi-pencil"></i> Editar
+              </button>
+              <button
+                class="btn btn-sm btn-danger ms-2"
+                (click)="onDelete(assunto.codAs)"
+              >
+                <i class="bi bi-trash"></i> Excluir
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

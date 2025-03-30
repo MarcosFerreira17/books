@@ -1,0 +1,297 @@
+<div class="container mt-4">
+  <div class="mb-2">
+    <button class="btn btn-sm btn-info ms-2" (click)="downloadRelatorio()">
+      <i class="bi bi-file-pdf"></i> Download Relatório
+    </button>
+  </div>
+  <!-- Formulário -->
+  <div class="card mb-4">
+    <div class="card-body">
+      <h2>{{ isEditing ? "Editar" : "Novo" }} Livro</h2>
+      <form [formGroup]="livroForm" (ngSubmit)="onSubmit()">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Título</label>
+            <input type="text" class="form-control" formControlName="titulo" />
+            <div
+              *ngIf="
+                livroForm.get('titulo')?.invalid &&
+                livroForm.get('titulo')?.touched
+              "
+              class="text-danger"
+            >
+              Título é obrigatório (máx. 40 caracteres)
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Editora</label>
+            <input type="text" class="form-control" formControlName="editora" />
+            <div
+              *ngIf="
+                livroForm.get('editora')?.invalid &&
+                livroForm.get('editora')?.touched
+              "
+              class="text-danger"
+            >
+              Editora é obrigatória
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">Edição</label>
+            <input
+              type="number"
+              class="form-control"
+              formControlName="edicao"
+            />
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">Ano Publicação</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="anoPublicacao"
+              placeholder="YYYY"
+              maxlength="4"
+            />
+            <div
+              *ngIf="
+                livroForm.get('anoPublicacao')?.invalid &&
+                livroForm.get('anoPublicacao')?.touched
+              "
+              class="text-danger"
+            >
+              Ano inválido (formato: YYYY)
+            </div>
+          </div>
+
+          <!-- Autores -->
+          <div class="col-md-6">
+            <label class="form-label">Autores</label>
+            <div formArrayName="autores">
+              <div
+                *ngFor="let autor of autoresArray.controls; let i = index"
+                class="mb-2"
+              >
+                <div class="input-group">
+                  <select class="form-select" [formControlName]="i">
+                    <option value="">Selecione um autor</option>
+                    <option *ngFor="let autor of autores" [value]="autor.codAu">
+                      {{ autor.nome }}
+                    </option>
+                  </select>
+                  <button
+                    type="button"
+                    class="btn btn-danger"
+                    (click)="removeAutor(i)"
+                  >
+                    <i class="bi bi-trash"></i>Remover
+                  </button>
+                </div>
+              </div>
+              <button
+                type="button"
+                class="btn btn-secondary mt-2"
+                (click)="addAutor()"
+              >
+                <i class="bi bi-plus"></i> Adicionar Autor
+              </button>
+            </div>
+          </div>
+
+          <!-- Assuntos -->
+          <div class="col-md-6">
+            <label class="form-label">Assuntos</label>
+            <div formArrayName="assuntos">
+              <div
+                *ngFor="let assunto of assuntosArray.controls; let i = index"
+                class="mb-2"
+              >
+                <div class="input-group">
+                  <select class="form-select" [formControlName]="i">
+                    <option value="">Selecione um assunto</option>
+                    <option
+                      *ngFor="let assunto of assuntos"
+                      [value]="assunto.codAs"
+                    >
+                      {{ assunto.descricao }}
+                    </option>
+                  </select>
+                  <button
+                    type="button"
+                    class="btn btn-danger"
+                    (click)="removeAssunto(i)"
+                  >
+                    <i class="bi bi-trash"></i>Remover
+                  </button>
+                </div>
+              </div>
+              <button
+                type="button"
+                class="btn btn-secondary mt-2"
+                (click)="addAssunto()"
+              >
+                <i class="bi bi-plus"></i> Adicionar Assunto
+              </button>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <h4>Preços</h4>
+            <div formArrayName="precos">
+              <div
+                *ngFor="let preco of precosArray.controls; let i = index"
+                [formGroupName]="i"
+                class="row g-3 mb-3"
+              >
+                <div class="col-md-4">
+                  <label class="form-label">Tipo de Compra</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="tipoCompra"
+                    placeholder="Ex: Balcao, SelfService, Internet, Evento"
+                  />
+                  <div
+                    *ngIf="
+                      precosArray.at(i).get('tipoCompra')?.invalid &&
+                      precosArray.at(i).get('tipoCompra')?.touched
+                    "
+                    class="text-danger"
+                  >
+                    Tipo de compra é obrigatório.
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">Valor (R$)</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    formControlName="valor"
+                    min="0"
+                    step="0.01"
+                  />
+                  <div
+                    *ngIf="
+                      precosArray.at(i).get('valor')?.invalid &&
+                      precosArray.at(i).get('valor')?.touched
+                    "
+                    class="text-danger"
+                  >
+                    Valor deve ser positivo.
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <button
+                    type="button"
+                    class="btn btn-danger mt-4"
+                    (click)="removePreco(i)"
+                  >
+                    <i class="bi bi-trash"></i>Remover
+                  </button>
+                </div>
+              </div>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                (click)="addPreco()"
+              >
+                Adicionar Preço
+              </button>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <button
+              type="submit"
+              class="btn btn-primary"
+              [disabled]="livroForm.invalid"
+            >
+              {{ isEditing ? "Atualizar" : "Salvar" }}
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary ms-2"
+              (click)="resetForm()"
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Tabela -->
+  <!-- Tabela -->
+  <div class="card">
+    <div class="card-body">
+      <h2>Lista de Livros</h2>
+      <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th>Título</th>
+            <th>Editora</th>
+            <th>Edição</th>
+            <th>Ano</th>
+            <th>Preços</th>
+            <!-- Nova coluna -->
+            <th>Autores</th>
+            <th>Assuntos</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let livro of livros">
+            <td>{{ livro.titulo }}</td>
+            <td>{{ livro.editora }}</td>
+            <td>{{ livro.edicao || "-" }}</td>
+            <td>{{ livro.anoPublicacao }}</td>
+            <td>
+              <div *ngFor="let preco of livro.precos" class="mb-1">
+                <span class="badge bg-secondary">
+                  {{ preco.tipoCompra }}: R$
+                  {{ preco.valor | number : "1.2-2" }}
+                </span>
+              </div>
+              <div *ngIf="livro.precos.length === 0" class="text-muted">
+                Sem preços
+              </div>
+            </td>
+            <td>
+              <span
+                *ngFor="let autor of livro.autores"
+                class="badge bg-info me-1"
+              >
+                {{ autor.nome }}
+              </span>
+            </td>
+            <td>
+              <span
+                *ngFor="let assunto of livro.assuntos"
+                class="badge bg-success me-1"
+              >
+                {{ assunto.descricao }}
+              </span>
+            </td>
+            <td>
+              <button class="btn btn-sm btn-warning" (click)="onEdit(livro)">
+                <i class="bi bi-pencil"></i>
+                Editar
+              </button>
+              <button
+                class="btn btn-sm btn-danger ms-2"
+                (click)="onDelete(livro.codl)"
+              >
+                <i class="bi bi-trash"></i>
+                Excluir
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

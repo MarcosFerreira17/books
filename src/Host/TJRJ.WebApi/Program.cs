@@ -41,6 +41,18 @@ builder.Services.AddInfraServices();
 
 builder.Services.AddApplicationServices();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "CorsPolicy",
+        builder =>
+        {
+            builder.WithOrigins("http://localhost:4200")
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials();
+        });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -53,10 +65,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseCors(configurePolicy: policy =>
-{
-    policy.WithOrigins("https://localhost:5173");
-});
+app.UseCors("CorsPolicy");
 
 app.UseExceptionHandler();
 

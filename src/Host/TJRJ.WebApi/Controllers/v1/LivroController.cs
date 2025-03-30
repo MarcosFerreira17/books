@@ -30,7 +30,7 @@ public class LivroController : BaseController
     {
         var result = _livroService.GetById(id);
 
-        return HandleResult(result);
+        return HandleResultById(result);
     }
 
     [HttpPost]

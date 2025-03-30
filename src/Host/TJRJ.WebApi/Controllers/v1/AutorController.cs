@@ -30,7 +30,7 @@ public class AutoresController : BaseController
     {
         var result = _autorService.GetById(id);
 
-        return HandleResult(result);
+        return HandleResultById(result);
     }
 
     [HttpPost]

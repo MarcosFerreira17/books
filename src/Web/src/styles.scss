@@ -1,4 +1,10 @@
-/* You can add global styles to this file, and also import other style files */
-
-/* Importing Bootstrap SCSS file. */
 @import 'bootstrap/scss/bootstrap';
+
+.main-content {
+    margin-left: 250px;
+    transition: margin 0.3s ease;
+  
+    @media (max-width: 768px) {
+      margin-left: 70px;
+    }
+  }

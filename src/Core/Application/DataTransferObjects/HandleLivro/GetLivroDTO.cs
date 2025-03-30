@@ -10,7 +10,7 @@ public class GetLivroDTO
     public string Editora { get; set; }
     public int Edicao { get; set; }
     public string AnoPublicacao { get; set; }
-    public ICollection<AutorDTO> Autores { get; set; }
-    public ICollection<AssuntoDTO> Assuntos { get; set; }
-    public ICollection<LivroPrecoDTO> Precos { get; set; }
+    public ICollection<GetAutorDTO> Autores { get; set; }
+    public ICollection<GetAssuntoDTO> Assuntos { get; set; }
+    public ICollection<GetLivroPrecoDTO> Precos { get; set; }
 }

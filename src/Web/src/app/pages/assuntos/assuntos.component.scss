@@ -1,0 +1,30 @@
+.card {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+    
+    &-body {
+      padding: 1.5rem;
+    }
+  }
+  
+  .table {
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    
+    th {
+      background-color: #f8f9fa;
+      font-weight: 600;
+    }
+    
+    .btn-sm {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.875rem;
+    }
+  }
+  
+  .text-danger {
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+  }

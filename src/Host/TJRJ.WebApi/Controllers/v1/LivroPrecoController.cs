@@ -30,7 +30,7 @@ public class LivroPrecosController : BaseController
     {
         var result = _livroPrecoService.GetById(id);
 
-        return HandleResult(result);
+        return HandleResultById(result);
     }
 
     [HttpPost]

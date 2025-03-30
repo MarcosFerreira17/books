@@ -8,7 +8,7 @@ public interface ILivroService {
 
     ResultGeneric<GetLivroDTO> GetById(int cod);
 
-    Result Create(LivroDTO request);
+    ResultGeneric<int> Create(LivroDTO request);
 
     Result Update(int cod, LivroDTO request);
 

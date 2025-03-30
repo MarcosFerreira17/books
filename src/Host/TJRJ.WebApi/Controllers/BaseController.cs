@@ -16,6 +16,17 @@ public class BaseController : ControllerBase
         return BadRequest(result.Errors); // 400
     }
 
+    protected IActionResult HandleResultById<T>(ResultGeneric<T> result)
+    {
+        if (result == null)
+            return Problem("Ocorreu um erro inesperado."); // 500
+
+        if (result.IsSuccess)
+            return Ok(result.Value); // 200
+
+        return NotFound(result.Errors); // 400
+    }
+
     // Para operações sem retorno (Result)
     protected IActionResult HandleResult(Result result)
     {
