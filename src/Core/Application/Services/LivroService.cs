@@ -158,6 +158,12 @@ public class LivroService : ILivroService
     {
         var errors = new List<string>();
 
+        if (request.Autores.Count == 0)
+            errors.Add("Pelo menos um autor é obrigatório.");
+
+        if (request.Assuntos.Count == 0)
+            errors.Add("Pelo menos um assunto é obrigatório.");
+
         if (string.IsNullOrEmpty(request.Titulo))
             errors.Add("Título é obrigatório.");
 
@@ -165,9 +171,7 @@ public class LivroService : ILivroService
             errors.Add("Editora é obrigatória.");
 
         if (!int.TryParse(request.AnoPublicacao, out int ano))
-        {
             errors.Add($"{ano} Ano de publicação inválido.");
-        }
 
         return errors;
     }
