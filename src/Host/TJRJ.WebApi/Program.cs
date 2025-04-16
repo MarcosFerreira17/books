@@ -33,7 +33,8 @@ builder.Services.AddProblemDetails(options =>
     };
 });
 
-string connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new ArgumentException("Connection string not found");
+string connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
+                            ?? throw new ArgumentException("Connection string not found");
 
 builder.Services.AddDatabase(connectionString);
 
@@ -64,6 +65,8 @@ if (app.Environment.IsDevelopment())
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "TJRJ v1");
     });
 }
+
+app.SeedDatabase();
 
 app.UseCors("CorsPolicy");
 

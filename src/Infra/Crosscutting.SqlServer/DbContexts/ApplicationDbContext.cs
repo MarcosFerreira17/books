@@ -15,6 +15,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<Autor> Autor { get; set; }
     public DbSet<Assunto> Assunto { get; set; }
     public DbSet<LivroPreco> LivroPreco { get; set; }
+    public DbSet<LivroAutor> LivroAutor { get; set; }
+    public DbSet<LivroAssunto> LivroAssunto { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

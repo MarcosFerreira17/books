@@ -1,6 +1,8 @@
 ﻿using Infra.Database.DbContexts;
+using Infra.Database.Helpers;
 using Infra.Database.Repositories;
 using Infra.Database.Repositories.Interfaces;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,6 +18,17 @@ public static class DependencyInjection
         });
 
         return services;
+    }
+
+    public static void SeedDatabase(this IApplicationBuilder app)
+    {
+        using IServiceScope scope = app.ApplicationServices.CreateScope();
+        
+        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        
+        context.Database.Migrate();
+        
+        SeedData.Seed(context);
     }
 
     public static IServiceCollection AddInfraServices(this IServiceCollection services)
