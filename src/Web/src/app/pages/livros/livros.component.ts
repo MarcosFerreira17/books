@@ -80,9 +80,19 @@ export class LivrosComponent implements OnInit {
     return this.livroForm.get('precos') as FormArray;
   }
 
+  // Adicionar na classe
+  tiposCompra = ['Balcao', 'SelfService', 'Internet', 'Evento'];
+
+  // Atualizar a função addPreco() para incluir validação
   addPreco(): void {
     const precoGroup = this.fb.group({
-      tipoCompra: ['', Validators.required],
+      tipoCompra: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(/^(Balcao|SelfService|Internet|Evento)$/),
+        ],
+      ],
       valor: [0, [Validators.required, Validators.min(0)]],
     });
     this.precosArray.push(precoGroup);

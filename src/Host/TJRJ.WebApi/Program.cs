@@ -38,9 +38,9 @@ if (app.Environment.IsDevelopment())
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "TJRJ v1");
     });
+    
+    app.SeedDatabase();
 }
-
-app.SeedDatabase();
 
 app.UseCors("CorsPolicy");
 
