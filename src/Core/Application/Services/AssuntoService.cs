@@ -3,6 +3,7 @@ using Application.DataTransferObjects.HandleAssunto;
 using Application.Services.Interfaces;
 using Domain.Entities;
 using Infra.Database.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services;
 
@@ -32,10 +33,13 @@ public class AssuntoService : IAssuntoService
 
     public Result Delete(int cod)
     {
-        var entity = _assuntoRepository.Query(predicate: a => a.CodAs == cod).FirstOrDefault();
+        var entity = _assuntoRepository.Query(predicate: a => a.CodAs == cod).Include(l => l.Livros).FirstOrDefault();
 
         if (entity == null)
             return Result.Failure("Assunto não encontrado.");
+
+        if (entity.Livros.Count != 0)
+            return Result.Failure("Assunto não pode ser excluido pois está associado a um livro.");
 
         _assuntoRepository.Delete(entity);
         _assuntoRepository.SaveChanges();

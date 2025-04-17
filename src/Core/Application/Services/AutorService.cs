@@ -42,13 +42,13 @@ public class AutorService : IAutorService
 
     public Result Delete(int cod)
     {
-        var entity = _autorRepository.Query(predicate: a => a.CodAu == cod).Include(entity => entity.Livros).FirstOrDefault();
+        var entity = _autorRepository.Query(predicate: a => a.CodAu == cod).Include(l => l.Livros).FirstOrDefault();
 
         if (entity == null)
             return Result.Failure("Autor não encontrado.");
 
-        if(entity.Livros.Count > 0)
-            return Result.Failure("Autor não pode ser excluído, pois possui livros associados.");   
+        if(entity.Livros.Count != 0)
+            return Result.Failure("Autor não pode ser excluido pois está associado a um livro.");
 
         _autorRepository.Delete(entity);
         _autorRepository.SaveChanges();

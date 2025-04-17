@@ -40,6 +40,8 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+app.SeedDatabase();
+
 app.UseCors("CorsPolicy");
 
 app.UseExceptionHandler();
