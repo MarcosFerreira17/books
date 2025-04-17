@@ -1,5 +1,7 @@
 ﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.OpenApi.Models;
+using System.Diagnostics;
 using System.Reflection;
 
 namespace TJRJ.WebApi.Extensions;
@@ -10,11 +12,14 @@ public static class ServiceExtensions
     {
         services.AddCors(options =>
         {
-            options.AddPolicy(name: "AllowAngular",
-                configurePolicy: policy =>
-                {
-                    policy.WithOrigins("https://localhost:5173");
-                });
+            options.AddPolicy(name: "CorsPolicy",
+            builder =>
+            {
+                builder.WithOrigins("http://localhost:4200")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials();
+            });
         });
     }
 
@@ -59,6 +64,24 @@ public static class ServiceExtensions
             options.GroupNameFormat = "'v'V";
             options.SubstituteApiVersionInUrl = true;
         });
+    }
+
+    public static void AddProblemDetailsExtensions(this IServiceCollection services)
+    {
+        services.AddProblemDetails(options =>
+        {
+            options.CustomizeProblemDetails = context =>
+            {
+                context.ProblemDetails.Instance =
+                    $"{context.HttpContext.Request.Method} {context.HttpContext.Request.Path}";
+
+                context.ProblemDetails.Extensions.TryAdd("requestId", context.HttpContext.TraceIdentifier);
+
+                Activity? activity = context.HttpContext.Features.Get<IHttpActivityFeature>()?.Activity;
+                context.ProblemDetails.Extensions.TryAdd("traceId", activity?.Id);
+            };
+        });
+
     }
 
 }
