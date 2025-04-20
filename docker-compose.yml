@@ -1,6 +1,29 @@
 services:
-    tjrj.webapi:
-        image: ${DOCKER_REGISTRY-}tjrjwebapi
-        build:
-            context: .
-            dockerfile: src/Host/TJRJ.WebApi/Dockerfile
+    db:
+        image: mcr.microsoft.com/mssql/server:latest
+        environment:
+            SA_PASSWORD: "1q2w3e4r@#$"
+            ACCEPT_EULA: "Y"
+        ports:
+            - "1433:1433"
+        volumes:
+            - sql_data:/var/opt/mssql
+
+    backend:
+        build: ./src/Host
+        ports:
+            - "5000:80"
+        environment:
+            ConnectionStrings__Default: "Server=localhost;Database=master;user id=sa;Password=1q2w3e4r@#$;Trusted_Connection=False;TrustServerCertificate=True;MultipleActiveResultSets=true;Encrypt=false;"
+        depends_on:
+            - db
+
+    frontend:
+        build: ./src/Web
+        ports:
+            - "80:80"
+        depends_on:
+            - backend
+
+volumes:
+    sql_data:
