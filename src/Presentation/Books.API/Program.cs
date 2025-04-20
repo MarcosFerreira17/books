@@ -1,7 +1,7 @@
 using Application;
 using Infra.Database;
 using QuestPDF.Infrastructure;
-using TJRJ.WebApi.Extensions;
+using Books.API.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 

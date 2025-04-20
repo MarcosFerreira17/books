@@ -4,7 +4,7 @@ using Microsoft.OpenApi.Models;
 using System.Diagnostics;
 using System.Reflection;
 
-namespace TJRJ.WebApi.Extensions;
+namespace Books.API.Extensions;
 
 public static class ServiceExtensions
 {
