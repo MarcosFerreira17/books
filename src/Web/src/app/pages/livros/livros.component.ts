@@ -13,6 +13,8 @@ import { Assunto } from '../../models/assunto.model';
 import { Livro } from '../../models/livro.model';
 import { delay, forkJoin } from 'rxjs';
 import { LivroPreco } from '../../models/livropreco.model';
+import { ToastService } from '../../components/toast/toast.service';
+import { ErrorHandlerService } from '../../helpers/error-handler.service';
 
 @Component({
   selector: 'app-livros',
@@ -28,7 +30,12 @@ export class LivrosComponent implements OnInit {
   isEditing = false;
   codl!: number;
 
-  constructor(private fb: FormBuilder, private api: ApiService) {
+  constructor(
+    private fb: FormBuilder,
+    private api: ApiService,
+    private toast: ToastService,
+    private errorHandler: ErrorHandlerService
+  ) {
     this.livroForm = this.fb.group({
       titulo: ['', [Validators.required, Validators.maxLength(40)]],
       editora: ['', [Validators.required, Validators.maxLength(40)]],
@@ -73,9 +80,19 @@ export class LivrosComponent implements OnInit {
     return this.livroForm.get('precos') as FormArray;
   }
 
+  // Adicionar na classe
+  tiposCompra = ['Balcao', 'SelfService', 'Internet', 'Evento'];
+
+  // Atualizar a função addPreco() para incluir validação
   addPreco(): void {
     const precoGroup = this.fb.group({
-      tipoCompra: ['', Validators.required],
+      tipoCompra: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(/^(Balcao|SelfService|Internet|Evento)$/),
+        ],
+      ],
       valor: [0, [Validators.required, Validators.min(0)]],
     });
     this.precosArray.push(precoGroup);
@@ -94,8 +111,7 @@ export class LivrosComponent implements OnInit {
         window.URL.revokeObjectURL(url);
       },
       error: (err) => {
-        console.error('Erro ao gerar PDF:', err);
-        alert('Erro ao gerar o PDF. Tente novamente mais tarde.');
+        this.errorHandler.handleError(err);
       },
     });
   }
@@ -107,19 +123,19 @@ export class LivrosComponent implements OnInit {
   loadLivros(): void {
     this.api.getLivros().subscribe({
       next: (data) => (this.livros = data),
-      error: (err) => alert(`Erro ao carregar livros: ${err.error}`),
+      error: (err) => this.errorHandler.handleError(err),
     });
   }
 
   loadDependencies(): void {
     this.api.getAutores().subscribe({
       next: (autores) => (this.autores = autores),
-      error: (err) => alert(`Erro ao carregar autores: ${err.error}`),
+      error: (err) => this.errorHandler.handleError(err),
     });
 
     this.api.getAssuntos().subscribe({
       next: (assuntos) => (this.assuntos = assuntos),
-      error: (err) => alert(`Erro ao carregar assuntos: ${err.error}`),
+      error: (err) => this.errorHandler.handleError(err),
     });
   }
 
@@ -145,13 +161,10 @@ export class LivrosComponent implements OnInit {
           this.handlePrecos(this.codl, precosData);
           this.loadLivros();
           this.resetForm();
+          this.toast.showSuccess('Livro editado com sucesso.');
         },
         error: (err) => {
-          console.error('Erro ao atualizar livro:', err);
-          alert(
-            'Erro na atualização: ' +
-              (err.error?.message || 'Erro desconhecido')
-          );
+          this.errorHandler.handleError(err);
         },
       });
     } else {
@@ -160,12 +173,10 @@ export class LivrosComponent implements OnInit {
           this.handlePrecos(codl, precosData);
           this.loadLivros();
           this.resetForm();
+          this.toast.showSuccess('Livro criado com sucesso.');
         },
         error: (err) => {
-          console.error('Erro ao criar livro:', err);
-          alert(
-            'Erro na criação: ' + (err.error?.message || 'Erro desconhecido')
-          );
+          this.errorHandler.handleError(err);
         },
       });
     }
@@ -178,7 +189,7 @@ export class LivrosComponent implements OnInit {
           this.processPrecos(livroCodl, precos, livro.precos);
         },
         error: (err) => {
-          alert(`Erro ao carregar preços existentes ${err.error}`);
+          this.errorHandler.handleError(err);
         },
       });
     } else {
@@ -217,8 +228,8 @@ export class LivrosComponent implements OnInit {
 
     // Executar todas as operações
     forkJoin([...deleteOperations, ...createOperations]).subscribe({
-      next: () => console.log('Operações concluídas'),
-      error: (err) => console.error('Erro nas operações:', err),
+      next: () => this.toast.showInfo('Operações concluídas'),
+      error: (err) => this.errorHandler.handleError(err),
     });
   }
 
@@ -229,8 +240,8 @@ export class LivrosComponent implements OnInit {
         livroCodl: livroCodl,
       };
       this.api.createPrecos(precoData).subscribe({
-        next: () => console.log('Preço criado'),
-        error: (err) => alert(`Erro ao criar preço: ${err.error}`),
+        next: () => this.toast.showInfo('Preço criado'),
+        error: (err) => this.errorHandler.handleError(err),
       });
     });
   }
@@ -283,8 +294,11 @@ export class LivrosComponent implements OnInit {
   onDelete(id: number): void {
     if (confirm('Tem certeza que deseja excluir este livro?')) {
       this.api.deleteLivro(id).subscribe({
-        next: () => this.loadLivros(),
-        error: (err) => alert(`Erro ao excluir livro: ${err.error}`),
+        next: () => {
+          this.loadLivros();
+          this.toast.showSuccess('Livro deletado com sucesso.');
+        },
+        error: (err) => this.errorHandler.handleError(err),
       });
     }
   }

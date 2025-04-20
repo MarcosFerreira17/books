@@ -148,12 +148,12 @@
               >
                 <div class="col-md-4">
                   <label class="form-label">Tipo de Compra</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    formControlName="tipoCompra"
-                    placeholder="Ex: Balcao, SelfService, Internet, Evento"
-                  />
+                  <select class="form-select" formControlName="tipoCompra">
+                    <option value="">Selecione o tipo</option>
+                    <option *ngFor="let tipo of tiposCompra" [value]="tipo">
+                      {{ tipo }}
+                    </option>
+                  </select>
                   <div
                     *ngIf="
                       precosArray.at(i).get('tipoCompra')?.invalid &&

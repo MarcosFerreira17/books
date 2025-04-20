@@ -7,6 +7,8 @@ import {
 } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
 import { NgFor, NgIf } from '@angular/common';
+import { ToastService } from '../../components/toast/toast.service';
+import { ErrorHandlerService } from '../../helpers/error-handler.service';
 
 @Component({
   selector: 'app-assuntos',
@@ -20,7 +22,12 @@ export class AssuntosComponent implements OnInit {
   isEditing = false;
   currentId!: number;
 
-  constructor(private fb: FormBuilder, private api: ApiService) {
+  constructor(
+    private fb: FormBuilder,
+    private api: ApiService,
+    private toast: ToastService,
+    private errorHandler: ErrorHandlerService
+  ) {
     this.assuntoForm = this.fb.group({
       descricao: ['', [Validators.required, Validators.maxLength(20)]],
     });
@@ -33,7 +40,7 @@ export class AssuntosComponent implements OnInit {
   loadAssuntos(): void {
     this.api.getAssuntos().subscribe({
       next: (data) => (this.assuntos = data),
-      error: (err) => console.error('Erro ao carregar assuntos:', err),
+      error: (err) => this.errorHandler.handleError(err),
     });
   }
 
@@ -50,12 +57,9 @@ export class AssuntosComponent implements OnInit {
       next: () => {
         this.loadAssuntos();
         this.resetForm();
+        this.toast.showSuccess('Assunto criado com sucesso.');
       },
-      error: (err) =>
-        console.error(
-          `Erro ao ${this.isEditing ? 'atualizar' : 'criar'} assunto:`,
-          err
-        ),
+      error: (err) => this.errorHandler.handleError(err),
     });
   }
 
@@ -63,13 +67,17 @@ export class AssuntosComponent implements OnInit {
     this.isEditing = true;
     this.currentId = assunto.codAs;
     this.assuntoForm.patchValue(assunto);
+    this.toast.showSuccess('Assunto editado com sucesso.');
   }
 
   onDelete(id: number): void {
     if (confirm('Tem certeza que deseja excluir este assunto?')) {
       this.api.deleteAssunto(id).subscribe({
-        next: () => this.loadAssuntos(),
-        error: (err) => console.error('Erro ao excluir assunto:', err),
+        next: () => {
+          this.loadAssuntos();
+          this.toast.showSuccess('Assunto deletado com sucesso.');
+        },
+        error: (err) => this.errorHandler.handleError(err),
       });
     }
   }

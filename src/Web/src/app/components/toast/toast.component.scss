@@ -1,0 +1,25 @@
+// Adicione estas regras
+:host {
+  left: 50%;
+  position: fixed;
+  top: 20px;
+  z-index: 1200;
+  transform: translateX(-5px);
+  
+  // Para telas pequenas
+  @media (max-width: 768px) {
+    left: 10px;
+    right: 10px;
+    transform: none;
+    
+    .toast {
+      width: 100% !important;
+      max-width: none;
+    }
+  }
+}
+
+.toast-container {
+  max-width: 350px;
+  width: auto;
+}
