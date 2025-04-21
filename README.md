@@ -1,6 +1,7 @@
 
 # Sistema de Gerenciamento de Livros
 
+![.NET 8]()
 ![Angular](https://img.shields.io/badge/Angular-17+-DD0031?logo=angular)
 ![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-7952B3?logo=bootstrap)
 
