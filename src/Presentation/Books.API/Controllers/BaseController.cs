@@ -1,4 +1,4 @@
-﻿namespace TJRJ.WebApi.Controllers;
+﻿namespace Books.API.Controllers;
 
 using Application.DataTransferObjects;
 using Microsoft.AspNetCore.Mvc;

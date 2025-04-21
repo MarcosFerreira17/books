@@ -2,7 +2,6 @@
 using Domain.Views;
 using Infra.Database.Mappings;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Emit;
 
 namespace Infra.Database.DbContexts;
 
