@@ -16,8 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Core\Application\Application.csproj" />
-    <ProjectReference Include="..\..\Infra\Crosscutting.SqlServer\Infra.Database.csproj" />
+    <ProjectReference Include="..\..\src\Core\Application\Application.csproj" />
+    <ProjectReference Include="..\..\src\Infra\Database\Infra.Database.csproj" />
   </ItemGroup>
 
   <ItemGroup>

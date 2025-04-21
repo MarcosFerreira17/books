@@ -4,18 +4,18 @@ using Microsoft.OpenApi.Models;
 using System.Diagnostics;
 using System.Reflection;
 
-namespace TJRJ.WebApi.Extensions;
+namespace Books.API.Extensions;
 
 public static class ServiceExtensions
 {
-    public static void AddCorsExtensions(this IServiceCollection services)
+    public static void AddCorsExtensions(this IServiceCollection services, string[] urls)
     {
         services.AddCors(options =>
         {
             options.AddPolicy(name: "CorsPolicy",
             builder =>
             {
-                builder.WithOrigins("http://localhost:4200")
+                builder.WithOrigins(urls)
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials();
@@ -31,7 +31,7 @@ public static class ServiceExtensions
         {
             c.SwaggerDoc("v1", new OpenApiInfo
             {
-                Title = "TJRJ API",
+                Title = "Books API",
                 Version = "v1",
                 Description = "An API to perform Books operations",
                 Contact = new OpenApiContact
@@ -40,10 +40,6 @@ public static class ServiceExtensions
                     Email = "marcosfw7@@outlook.com",
                 }
             });
-            // Set the comments path for the Swagger JSON and UI.
-            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-            c.IncludeXmlComments(xmlPath);
         });
     }
 

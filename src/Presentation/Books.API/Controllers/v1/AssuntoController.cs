@@ -1,26 +1,23 @@
 ﻿using Application.DataTransferObjects.HandleAssunto;
-using Application.DataTransferObjects.HandleAutor;
 using Application.Services.Interfaces;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 
-namespace TJRJ.WebApi.Controllers.v1;
+namespace Books.API.Controllers.v1;
 
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/[controller]")]
-public class AutoresController : BaseController
+public class AssuntosController : BaseController
 {
-    private readonly IAutorService _autorService;
-    public AutoresController(IAutorService autorService)
-    {
-        _autorService = autorService ?? throw new ArgumentNullException(nameof(autorService));
-    }
+    private readonly IAssuntoService _assuntoService;
+    public AssuntosController(IAssuntoService assuntoService) 
+        => _assuntoService = assuntoService ?? throw new ArgumentNullException(nameof(assuntoService));
 
     [HttpGet]
     public IActionResult Get()
     {
-        var result = _autorService.GetAll();
+        var result = _assuntoService.GetAll();
 
         return HandleResult(result);
     }
@@ -28,23 +25,23 @@ public class AutoresController : BaseController
     [HttpGet("{id}")]
     public IActionResult GetById(int id)
     {
-        var result = _autorService.GetById(id);
+        var result = _assuntoService.GetById(id);
 
         return HandleResultById(result);
     }
 
     [HttpPost]
-    public IActionResult Post(AutorDTO request)
+    public IActionResult Post(AssuntoDTO request)
     {
-        var result = _autorService.Create(request);
+        var result = _assuntoService.Create(request);
 
         return HandleResult(result);
     }
 
     [HttpPut("{id}")]
-    public IActionResult Put(int id, AutorDTO request)
+    public IActionResult Put(int id, AssuntoDTO request)
     {
-        var result = _autorService.Update(id, request);
+        var result = _assuntoService.Update(id, request);
 
         return HandleResult(result);
     }
@@ -52,7 +49,7 @@ public class AutoresController : BaseController
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {
-        var result = _autorService.Delete(id);
+        var result = _assuntoService.Delete(id);
 
         return HandleResult(result);
     }
