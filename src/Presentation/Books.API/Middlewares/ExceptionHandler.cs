@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
-namespace TJRJ.WebApi;
+namespace Books.API.Middlewares;
 
 public class CustomExceptionHandler(IProblemDetailsService problemDetailsService) : IExceptionHandler
 {

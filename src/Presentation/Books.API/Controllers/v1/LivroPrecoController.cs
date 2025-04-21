@@ -3,7 +3,7 @@ using Application.Services.Interfaces;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 
-namespace TJRJ.WebApi.Controllers.v1;
+namespace Books.API.Controllers.v1;
 
 [ApiController]
 [ApiVersion("1.0")]

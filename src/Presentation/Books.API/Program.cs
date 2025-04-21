@@ -1,7 +1,7 @@
 using Application;
 using Infra.Database;
 using QuestPDF.Infrastructure;
-using TJRJ.WebApi.Extensions;
+using Books.API.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,7 +26,10 @@ builder.Services.AddInfraServices();
 
 builder.Services.AddApplicationServices();
 
-builder.Services.AddCorsExtensions();
+string[] corsUrls = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()
+                            ?? throw new ArgumentNullException("Cors:AllowedOrigins");
+
+builder.Services.AddCorsExtensions(corsUrls);
 
 var app = builder.Build();
 
@@ -36,7 +39,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "TJRJ v1");
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Books v1");
     });
     
     app.SeedDatabase();
